@@ -13,15 +13,15 @@ def load_corps(datfilepath):
     fl.close()
     return (corps)
 
-# def load_players(datfilepath):
-#     plyrs = {}
-#     flnm = datfilepath + "players.tsv"
-#     fl = open(flnm)
-#     for ln in fl:
-#         flds = ln.strip().split('\t')
-#         plyrs[flds[0]] = flds[3]
-#     fl.close()
-#     return (plyrs)
+def load_players(datfilepath):
+    plyrs = {}
+    flnm = datfilepath + "players.tsv"
+    fl = open(flnm)
+    for ln in fl:
+        flds = ln.strip().split('\t')
+        plyrs[flds[0]] = flds[3]
+    fl.close()
+    return (plyrs)
 
 def corp_combos(corps):
     # generate all 2-corporation combinations that the players can choose between
