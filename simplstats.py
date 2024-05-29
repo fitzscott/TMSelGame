@@ -11,32 +11,55 @@ def all_stats(metric, ky, lbl):
     # print(f"{ky} had {lbl} minimum {minmetr}, maximum {maxmetr}, average {mnmetr:.3f}, median {medmetr} over {cnt} games")
     return (mnmetr, minmetr, maxmetr, medmetr, cnt)
 
-def prnrow(ky, mtrc, msrs):
-    print(f"<tr><td>{ky}</td><td>{mtrc}</td>")
-    for msr in msrs:
-        if len(str(msr)) > 4:
-            prnmsr = f"{msr:.3f}"
+def prnrow(ky, mtrc, msrs, first=False):
+    rowspan = "3"
+    algn = ' align="right"'
+    if first:
+        print(f'<tr><td rowspan="{rowspan}">{ky}</td><td>{mtrc}</td>')
+    else:
+        print(f'<tr><td>{mtrc}</td>')
+    nummsrs = len(msrs)
+    for msridx in range(nummsrs):
+        if len(str(msrs[msridx])) > 4:
+            prnmsr = f"{msrs[msridx]:.3f}"
         else:
-            prnmsr = msr
-        print(f"<td>{prnmsr}</td>")
+            prnmsr = msrs[msridx]
+        # print(f'<td>{prnmsr}</td>')
+        # make # of games pretty - same across all metrics
+        if msridx == nummsrs - 1 and first:
+            print(f'<td rowspan="{rowspan}"{algn}>{prnmsr}</td>')
+        elif msridx != nummsrs - 1:
+            print(f'<td{algn}>{prnmsr}</td>')
     print("</tr>")
 
 def gen_stats(bykey, lbl):
     metrix = ["Average", "Minimum", "Maximum", "Median"]
-    print(f"<table><tr><th>{lbl}</th><th>Metric</th>")
+    print(f"<table border='1'><tr><th>{lbl}</th><th>Metric</th>")
     for metrc in metrix:
         print(f"<th>{metrc}</th>")
-    print("<th>Number of games")
+    print("<th>Game Count")
     print("</tr>")
-    for ky in bykey.keys():
+    for ky in sorted(bykey.keys()):
         scorz = [bykey[ky][idx][0] for idx in range(len(bykey[ky]))]
         ranks = [bykey[ky][idx][1] for idx in range(len(bykey[ky]))]
+        bested = [bykey[ky][idx][2] for idx in range(len(bykey[ky]))]
         scorstats = all_stats(scorz, ky, "score")
-        prnrow(ky, "Score", scorstats)
+        prnrow(ky, "Score", scorstats, True)
         rankstats = all_stats(ranks, ky, "rank")
         prnrow(ky, "Rank", rankstats)
+        bestedstats = all_stats(bested, ky, "bested")
+        prnrow(ky, "Bested", bestedstats)
     print("</table>")
     print("<br><br>")
+
+def plyr_cnt_per_game(gameresults):
+    pcnts = {}
+    for gmrs in gameresults:
+        # game ID is index 0
+        gameid = gmrs[0]
+        pcnts[gameid] = pcnts.get(gameid, 0) + 1
+    # print(pcnts)
+    return pcnts
 
 def simple_stats(gamerslts):
     # for each player, include stats:
@@ -44,20 +67,24 @@ def simple_stats(gamerslts):
     # for each corporation, same
     plyrz = {}
     corps = {}
+    plyrcnts = plyr_cnt_per_game(gamerslts)
     for gmrs in gamerslts:
         # player is index 2, corporation is index 3
         plyr = gmrs[2]
         corp = gmrs[3]
         scor = int(gmrs[4])
         rank = int(gmrs[5])
+        # game ID is index 0
+        gameid = gmrs[0]
+        bested_cnt = plyrcnts[gameid] - rank
         if plyr in plyrz.keys():
-            plyrz[plyr].append((scor,rank))
+            plyrz[plyr].append((scor,rank,bested_cnt))
         else:
-            plyrz[plyr] = [(scor,rank)]
+            plyrz[plyr] = [(scor,rank,bested_cnt)]
         if corp in corps.keys():
-            corps[corp].append((scor,rank))
+            corps[corp].append((scor,rank,bested_cnt))
         else:
-            corps[corp] = [(scor,rank)]
+            corps[corp] = [(scor,rank,bested_cnt)]
     gen_stats(plyrz, "Player")
     gen_stats(corps, "Corporation")
 
