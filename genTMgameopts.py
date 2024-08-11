@@ -104,15 +104,20 @@ def score_game_combos(game_combos, ply_corps, plyr_oppos_plyd):
     # fewer players have corporations they have already played.
     scores = []
     plyr_ids = list(ply_corps.keys())
-    # print(f"player corps = {ply_corps}")
-    # print(f"plyr_ids = {plyr_ids}")
     for gc in game_combos:
         score = 0
+        mult_plyr_corp_present = []
         for plyr_pos in range(len(plyr_ids)):
             for corp in ply_corps[plyr_ids[plyr_pos]]:
                 # print(f"checking corp {corp} in game {gc} = player {plyr_ids[plyr_pos]} position {plyr_pos} {gc[plyr_pos]}")
                 if corp in gc[plyr_pos]:
-                    score += 100
+                    # multiple matches should score higher (worse)
+                    if plyr_pos in mult_plyr_corp_present:
+                        fctr = 10
+                    else:
+                        fctr = 1
+                    score += 100 * fctr
+                    mult_plyr_corp_present.append(plyr_pos)
             if plyr_oppos_plyd is not None:
                 oppos = [plyr_id for plyr_id in plyr_ids if plyr_id != plyr_ids[plyr_pos]]
                 for oppo in oppos:
