@@ -16,7 +16,10 @@ def corps_not_played(corps, gmrs, played):
                         corps_notplyd_plyrz[plyr].append(corp)
                     else:
                         corps_notplyd_plyrz[plyr] = [corp]
-            print(f"{plyr} has not played {' '.join(corps_notplyd_plyrz[plyr])}")
+            if plyr in corps_notplyd_plyrz.keys():
+                print(f"{plyr} has not played {' '.join(corps_notplyd_plyrz[plyr])}")
+            else:
+                print(f"{plyr} has played all corporations")
     plyrnamez = gtgo.load_players(datfilepath)
 
 if __name__ == "__main__":

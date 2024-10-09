@@ -86,7 +86,7 @@ class simplstats():
             rank = int(gmrs[5])
             # game ID is index 0
             gameid = gmrs[0]
-            bested_cnt = self._plyrcnts[gameid] - rank
+            bested_cnt = float(self._plyrcnts[gameid] - rank)
             # scale to a 4 player game
             scor_pct = float(scor) / float(self._gametotscore[gameid]) / 4.0 * self._plyrcnts[gameid] * 100.0
             if plyr in plyrz.keys():
