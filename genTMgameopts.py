@@ -149,6 +149,17 @@ def find_corp_assgnmt(plyrs, plidxs, gamerslts, corps, corp_comb, max_solns):
         if match_cnt >= max_solns:
             break
 
+def prn_plyrz(plyrz):
+    plystrlen = 15
+    toprn = ""
+    for pidx in range(len(plyrs)):
+        toprn += f"{pidx}\t{plyrs[pidx].ljust(plystrlen)}\t"
+        if (pidx + 1) % 4 == 0:
+            print(toprn)
+            toprn = ""
+    if toprn != "":
+        print(toprn)
+
 if __name__ == "__main__":
     datfilepath = os.environ.get("TMDATPATH", "./")
     corps = load_corps(datfilepath)
@@ -156,8 +167,7 @@ if __name__ == "__main__":
     gamerslts = load_game_results(datfilepath)
     # print(f"found {len(gamerslts)} game results records")
     plyrs = sorted(list(set([gmrs[2] for gmrs in gamerslts])))
-    for pidx in range(len(plyrs)):
-        print(f"{pidx}\t{plyrs[pidx]}")
+    prn_plyrz(plyrs)
 
     if len(sys.argv) < 2:
         print(f"usage: python {sys.argv[0]} comma-separated-list-of-player-indices [number-solutions=10]")
