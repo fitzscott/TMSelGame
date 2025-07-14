@@ -154,7 +154,7 @@ def prn_plyrz(plyrz):
     toprn = ""
     for pidx in range(len(plyrs)):
         toprn += f"{pidx}\t{plyrs[pidx].ljust(plystrlen)}\t"
-        if (pidx + 1) % 4 == 0:
+        if (pidx + 1) % 3 == 0:
             print(toprn)
             toprn = ""
     if toprn != "":
