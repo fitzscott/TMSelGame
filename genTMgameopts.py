@@ -151,10 +151,14 @@ def find_corp_assgnmt(plyrs, plidxs, gamerslts, corps, corp_comb, max_solns):
 
 def prn_plyrz(plyrz):
     plystrlen = 15
+    scrnwid, scrnhi = os.get_terminal_size()
+    idxprnlen = 3
+    numplyrz2prn = scrnwid // (plystrlen + idxprnlen + 9)
     toprn = ""
     for pidx in range(len(plyrs)):
-        toprn += f"{pidx}\t{plyrs[pidx].ljust(plystrlen)}\t"
-        if (pidx + 1) % 3 == 0:
+        idxprn = str(pidx).zfill(idxprnlen)
+        toprn += f"{pidx} {plyrs[pidx].ljust(plystrlen)}\t"
+        if (pidx + 1) % numplyrz2prn == 0:
             print(toprn)
             toprn = ""
     if toprn != "":
