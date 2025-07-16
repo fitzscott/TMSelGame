@@ -171,9 +171,9 @@ if __name__ == "__main__":
     gamerslts = load_game_results(datfilepath)
     # print(f"found {len(gamerslts)} game results records")
     plyrs = sorted(list(set([gmrs[2] for gmrs in gamerslts])))
-    prn_plyrz(plyrs)
 
     if len(sys.argv) < 2:
+        prn_plyrz(plyrs)
         print(f"usage: python {sys.argv[0]} comma-separated-list-of-player-indices [number-solutions=10]")
         sys.exit(-1)
     if len(sys.argv) < 3:
